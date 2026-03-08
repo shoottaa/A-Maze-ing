@@ -14,13 +14,13 @@ class Cell:
         self.walls = 0xF  # 1111 = les 4 murs fermes
 
     def has_wall(self, direction: int) -> bool:
-        # AND bitwise ne garde que le bit de la direction
-        # Ex: 1101 & 0010 = 0000 -> False  -> pas de mur est
+        # AND bitwise : garde uniquement le bit de la direction
+        # Ex: 1101 & 0010 = 0000 -> False -> pas de mur est
         return bool(self.walls & direction)
 
     def remove_wall(self, direction: int) -> None:
-        # inverse les bits, & enleve le bit de la direction
-        # Ex: ~0010 = 1101, 1111 & 1101 = 1101 -> mur est casse
+        # Inverse les bits, & enlève le bit de la direction
+        # Ex: ~0010 = 1101, 1111 & 1101 = 1101 -> mur est cassé
         self.walls &= ~direction
 
     def to_hex(self) -> str:
@@ -41,15 +41,16 @@ class Maze:
             for x in range(width):
                 row.append(Cell(x, y))
             self.grid.append(row)
+        self.pattern_cells: set = set()
 
     def get_cell(self, x: int, y: int) -> Cell:
         if x < 0 or x >= self.width or y < 0 or y >= self.height:
             raise ValueError(f"Cell ({x},{y}) OOB")
         return self.grid[y][x]
 
-    """ ASCII Printing temporaire pour tester. 
-    L'affichage est un peu buggé parce-que les murs sont de deux côtés
-    et la ça en affiche que un"""
+    """ Affichage ASCII temporaire pour tester.
+    L'affichage est un peu buggé car les murs sont des deux côtés
+    et là ça n'en affiche qu'un seul. """
     def temp_print_grid(self) -> None:
         for y in range(self.height):
             top = ""
@@ -95,7 +96,7 @@ class Maze:
 
 
 if __name__ == "__main__":
-    m = Maze(5, 3, (0, 0), (4, 2))
+    m = Maze(5, 4, (0, 0), (4, 2))
 
     m.temp_print_grid()
     print()

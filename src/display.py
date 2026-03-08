@@ -75,7 +75,7 @@ class Display:
 
     def draw_cell(self, x: int, y: int) -> None:
         cell = self.maze.get_cell(x, y)
-        if cell.walls == 0xF:
+        if (x, y) in self.maze.pattern_cells:
             b, g, r, a = self.color_manager.current()
             interior = bytes([b // 4, g // 4, r // 4, a])
             self._fill_interior(x, y, interior)
