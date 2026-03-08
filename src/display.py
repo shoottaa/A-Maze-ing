@@ -162,10 +162,12 @@ class Display:
                 for x in range(self.maze.width):
                     self.draw_cell(x, y)
             if self.entry:
+                # Recupere la couleur précédente
                 last_index = (self.color_manager.index - 1) % len(WALL_COLORS)
                 entry_color = WALL_COLORS[last_index].to_bytes(4, 'little')
                 self._fill_interior(self.entry[0], self.entry[1], entry_color)
             if self.exit:
+                # Recupere la couleur suivante
                 next_index = (self.color_manager.index + 1) % len(WALL_COLORS)
                 exit_color = WALL_COLORS[next_index].to_bytes(4, 'little')
                 self._fill_interior(self.exit[0], self.exit[1], exit_color)
