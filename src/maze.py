@@ -6,6 +6,21 @@ EAST = 0x2  # 0010
 SOUTH = 0x4 # 0100
 WEST = 0x8 # 1000
 
+# (offset_x, offset_y, mur, lettre)
+DIRECTIONS = [
+    (0, -1, NORTH, "N"),
+    (1,  0, EAST,  "E"),
+    (0,  1, SOUTH, "S"),
+    (-1, 0, WEST,  "W"),
+]
+
+OPPOSITE = {
+    NORTH: SOUTH,
+    SOUTH: NORTH,
+    EAST:  WEST,
+    WEST:  EAST,
+}
+
 
 class Cell:
     def __init__(self, x: int, y: int) -> None:
@@ -47,65 +62,3 @@ class Maze:
         if x < 0 or x >= self.width or y < 0 or y >= self.height:
             raise ValueError(f"Cell ({x},{y}) OOB")
         return self.grid[y][x]
-
-    """ Affichage ASCII temporaire pour tester.
-    L'affichage est un peu buggé car les murs sont des deux côtés
-    et là ça n'en affiche qu'un seul. """
-    def temp_print_grid(self) -> None:
-        for y in range(self.height):
-            top = ""
-            for x in range(self.width):
-                cell = self.grid[y][x]
-                top += "+"
-                if cell.has_wall(NORTH):
-                    top += "---"
-                else:
-                    top += "   "
-            top += "+"
-            print(top)
-
-            mid = ""
-            for x in range(self.width):
-                cell = self.grid[y][x]
-                if cell.has_wall(WEST):
-                    mid += "|"
-                else:
-                    mid += " "
-                if (x, y) == self.entry:
-                    mid += " E "
-                elif (x, y) == self.exit_pos:
-                    mid += " X "
-                else:
-                    mid += "   "
-            if self.grid[y][self.width - 1].has_wall(EAST):
-                mid += "|"
-            else:
-                mid += " "
-            print(mid)
-
-        bot = ""
-        for x in range(self.width):
-            cell = self.grid[self.height - 1][x]
-            bot += "+"
-            if cell.has_wall(SOUTH):
-                bot += "---"
-            else:
-                bot += "   "
-        bot += "+"
-        print(bot)
-
-
-if __name__ == "__main__":
-    m = Maze(5, 4, (0, 0), (4, 2))
-
-    m.temp_print_grid()
-    print()
-
-    m.get_cell(1, 0).remove_wall(WEST)
-    m.get_cell(1, 0).remove_wall(SOUTH)
-    m.get_cell(1, 1).remove_wall(NORTH)
-    m.get_cell(1, 1).remove_wall(EAST)
-    m.get_cell(2, 1).remove_wall(WEST)
-
-    m.temp_print_grid()
-    print()

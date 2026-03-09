@@ -1,4 +1,4 @@
-from src.maze import Maze
+from src.maze import Maze, DIRECTIONS, OPPOSITE
 
 DIGIT_4 = [
     [1, 0, 0, 1, 0],
@@ -59,18 +59,11 @@ def pattern_42(maze: Maze) -> None:
         maze.get_cell(cell_x, cell_y).walls = 0xF
 
     # Ferme les murs autour du pattern
-    directions = [
-        (0, -1, 0x4),  # Nord ferme Sud
-        (0, +1, 0x1),  # Sud ferme Nord
-        (-1, 0, 0x2),  # Ouest ferme Est
-        (+1, 0, 0x8),  # Est ferme Ouest
-    ]
-
     for (cell_x, cell_y) in pattern_cells:
-        for offset_x, offset_y, wall_to_restore in directions:
+        for offset_x, offset_y, wall, _ in DIRECTIONS:
             neighbor_x = cell_x + offset_x
             neighbor_y = cell_y + offset_y
             if 0 <= neighbor_x < maze.width and 0 <= neighbor_y < maze.height:
                 if (neighbor_x, neighbor_y) not in pattern_cells:
                     maze.get_cell(neighbor_x, neighbor_y).walls \
-                                                            |= wall_to_restore
+                                                            |= OPPOSITE[wall]

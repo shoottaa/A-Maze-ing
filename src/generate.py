@@ -92,15 +92,3 @@ def generate_maze(maze: Maze, seed: int = 42,
         to_remove = random.sample(walls, min(nb, len(walls)))
         for from_x, from_y, to_x, to_y in to_remove:
             open_between(maze, from_x, from_y, to_x, to_y)
-
-
-if __name__ == "__main__":
-    print("=== PERFECT ===")
-    m = Maze(10, 5, (0, 0), (4, 2))
-    generate_maze(m, perfect=True)
-    m.temp_print_grid()
-
-    print("\n=== PAS PERFECT ===")
-    m2 = Maze(10, 5, (0, 0), (4, 2))
-    generate_maze(m2, perfect=False)
-    m2.temp_print_grid()

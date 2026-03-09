@@ -2,6 +2,7 @@ import sys
 from src.parse_config import parse_config
 from src.generate import generate_maze
 from src.maze import Maze
+from src.solve import write_output
 from src.display import Display, CELL_SIZE
 
 
@@ -16,6 +17,8 @@ def main() -> None:
     maze = Maze(config["WIDTH"], config["HEIGHT"],
                 config["ENTRY"], config["EXIT"])
     generate_maze(maze, perfect=config["PERFECT"])
+
+    write_output(maze, config["OUTPUT_FILE"])
 
     maze_params = {
         'WIDTH': config["WIDTH"],
