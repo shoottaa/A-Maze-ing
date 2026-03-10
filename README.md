@@ -169,8 +169,6 @@ L'intégration (brancher le générateur dans l'affichage, gérer la régénéra
 
 ## Ressources
 
-- [Génération de labyrinthes — Recursive Backtracker (Jamis Buck)](https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracker)
-- [Vue d'ensemble des algorithmes de labyrinthe](https://www.astrolog.org/labyrnth/algor.htm)
 - [BFS — Breadth-First Search (Wikipedia)](https://fr.wikipedia.org/wiki/Algorithme_de_parcours_en_largeur)
 - [Documentation MiniLibX](https://harm-smits.github.io/42docs/libs/minilibx)
 
