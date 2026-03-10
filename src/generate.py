@@ -49,6 +49,7 @@ DFS : Recursive backtracker
 
 def generate_maze(maze: Maze, seed: int = 42,
                   perfect: bool = True) -> None:
+    pattern_42(maze)
     random.seed(seed)
 
     visited = set()  # les cellules deja visitees
@@ -60,7 +61,7 @@ def generate_maze(maze: Maze, seed: int = 42,
 
         unvisited = []  # Liste des voisins non visités
         for neighbor in get_neighbors(maze, x, y):
-            if neighbor not in visited:
+            if neighbor not in visited and neighbor not in maze.pattern_cells:
                 unvisited.append(neighbor)
 
         if unvisited:
@@ -72,7 +73,6 @@ def generate_maze(maze: Maze, seed: int = 42,
             # Aucun voisin libre, on recule d'une case
             stack.pop()
 
-    pattern_42(maze)
 
     if not perfect:
         # On cherche tous les murs encore debout pour en casser 10%
