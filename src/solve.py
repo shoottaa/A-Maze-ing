@@ -45,6 +45,21 @@ def solve(maze: Maze) -> None:
     return None
 
 
+def solve_cells(maze: Maze) -> list[tuple]:
+    path_str = solve(maze)
+    if not path_str:
+        return []
+    convert_letter = {"N": (0, -1), "S": (0, 1), "E": (1, 0), "W": (-1, 0)}
+    x, y = maze.entry
+    cells = [(x, y)]
+    for letter in path_str:
+        dir_x, dir_y = convert_letter[letter]
+        x += dir_x
+        y += dir_y
+        cells.append((x, y))
+    return cells
+
+
 def reconstruct(parent: dict, start: tuple, end: tuple) -> str:
     letters = []
     current = end

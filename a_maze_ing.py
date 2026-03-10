@@ -42,6 +42,7 @@ def main() -> None:
                       buttons=buttons)
 
     buttons[0]["action"] = display.regenerate
+    buttons[1]["action"] = display.toggle_path
     buttons[2]["action"] = display.cycle_color
     display.set_maze(maze)
     display.draw_enter(config["ENTRY"][0], config["ENTRY"][1])

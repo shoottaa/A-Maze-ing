@@ -2,6 +2,7 @@ import random
 from mlx import Mlx  # type: ignore
 from src.maze import Maze, NORTH, SOUTH, EAST, WEST
 from src.color import ColorManager, WALL_COLORS  # type: ignore
+from src.solve import solve, solve_cells
 
 CELL_SIZE = 20
 WALL_SIZE = 3
@@ -10,6 +11,7 @@ BUTTON_W = 80        # largeur d'un bouton
 BUTTON_H = 28        # hauteur d'un bouton
 BUTTON_GAP = 15      # écart entre les boutons
 BUTTON_MARGIN = 15   # écart entre le maze et les boutons
+PATH_SPEED = 1       # Vitesse du path
 
 
 class Display:
@@ -37,6 +39,8 @@ class Display:
         self.color_manager = ColorManager()
         self.entry = None
         self.exit = None
+        self.path_cells = []
+        self.show_path = False
 
     def clear_image(self) -> None:
         """Remplit l'image de noir pour clear l'affichage"""
@@ -139,9 +143,19 @@ class Display:
         params = self.maze_params
         maze = Maze(params['WIDTH'], params['HEIGHT'],
                     params['ENTRY'], params['EXIT'])
-        self.generate_maze_func(maze, seed=random.randint(0, 2**31),
+        seed = random.randint(0, 2**31)
+        self.generate_maze_func(maze, seed=seed,
                                 perfect=params.get('PERFECT', True))
         self.set_maze(maze)
+        self.need_redraw = True
+        self.path_cells = []
+        self.show_path = False
+
+    def toggle_path(self) -> None:
+        self.show_path = not self.show_path
+        self.path_index = 0
+        if self.show_path:
+            self.path_cells = solve_cells(self.maze)
         self.need_redraw = True
 
     def key_pressed(self, key, param) -> None:
@@ -152,12 +166,15 @@ class Display:
             self.regenerate()
         elif key == 99:    # C
             self.cycle_color()
+        elif key == 112:   # P
+            self.toggle_path()
 
     def render(self, param) -> None:
         """Affiche le maze et les labels des boutons.
         Re-dessine le maze seulement si besoin"""
         if self.need_redraw:
             self.clear_image()
+            self.path_index = 0
             for y in range(self.maze.height):
                 for x in range(self.maze.width):
                     self.draw_cell(x, y)
@@ -172,6 +189,17 @@ class Display:
                 exit_color = WALL_COLORS[next_index].to_bytes(4, 'little')
                 self._fill_interior(self.exit[0], self.exit[1], exit_color)
             self.need_redraw = False
+        if self.show_path and self.path_index < len(self.path_cells):
+            
+            index_clr = (self.color_manager.index + 2) % len(WALL_COLORS)
+            path_color = WALL_COLORS[index_clr].to_bytes(4, 'little')
+            for _ in range(PATH_SPEED):
+                if self.path_index >= len(self.path_cells):
+                    break
+                x, y = self.path_cells[self.path_index]
+                if (x, y) != self.entry and (x, y) != self.exit:
+                    self._fill_interior(x, y, path_color)
+                self.path_index += 1
         self.mlx.mlx_put_image_to_window(self.mlx_ptr, self.win,
                                          self.img, 0, 0)
         self.draw_button_labels()
