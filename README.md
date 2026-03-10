@@ -174,4 +174,4 @@ L'intégration (brancher le générateur dans l'affichage, gérer la régénéra
 
 ### Utilisation de l'IA
 
-L'IA (ChatGPT / GitHub Copilot) a été utilisée pour la **compréhension** — clarifier le fonctionnement conceptuel des algorithmes DFS Backtracker et BFS, ainsi que la représentation bitmask des murs. Aucun code n'a été généré directement par l'IA.
+L'IA a été utilisée pour la **compréhension** — clarifier le fonctionnement conceptuel des algorithmes DFS Backtracker et BFS, ainsi que la représentation bitmask des murs. Aucun code n'a été généré directement par l'IA.
