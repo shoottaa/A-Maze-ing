@@ -2,7 +2,7 @@ import random
 from mlx import Mlx  # type: ignore
 from src.maze import Maze, NORTH, SOUTH, EAST, WEST
 from src.color import ColorManager, WALL_COLORS  # type: ignore
-from src.solve import solve, solve_cells
+from src.solve import solve_cells
 
 CELL_SIZE = 20
 WALL_SIZE = 3
@@ -31,6 +31,9 @@ class Display:
         self.maze = None
         self.img = self.mlx.mlx_new_image(self.mlx_ptr, self.width,
                                           self.height)
+        # self.pythondata = buffer
+        # self.bpp = bits par pixel
+        # self.sl = nb bits par ligne
         self.pythondata, self.bpp, self.sl, _ = \
             self.mlx.mlx_get_data_addr(self.img)
         self.maze_params = maze_params
@@ -44,6 +47,7 @@ class Display:
 
     def clear_image(self) -> None:
         """Remplit l'image de noir pour clear l'affichage"""
+        # little = bits moins significatifs en premier
         black = (0xFF000000).to_bytes(4, 'little') * (len(self.pythondata)
                                                       // 4)
         self.pythondata[:] = black
@@ -51,6 +55,7 @@ class Display:
     def _put_pixel(self, px: int, py: int, color: bytes) -> None:
         """Place un pixel de la couleur donnée à la position (px, py)"""
         offset = (py * self.sl) + (px * (self.bpp // 8))
+        # verifie que l'offset depasse pas le buffer
         if offset + 4 <= len(self.pythondata):
             self.pythondata[offset:offset + 4] = color
 
@@ -119,13 +124,15 @@ class Display:
         total_w = n * BUTTON_W + (n - 1) * BUTTON_GAP
         x0 = (self.width - total_w) // 2 - 30  # Centre les boutons + decalage
         y0 = self.maze_height + MAZE_MARGIN + BUTTON_MARGIN
-        return [(x0 + i * (BUTTON_W + BUTTON_GAP), y0, BUTTON_W, BUTTON_H)
-                for i in range(n)]
+        for i in range(n):
+            # Calcule le rectangle du bouton i: (x, y, width, height)
+            yield (x0 + i * (BUTTON_W + BUTTON_GAP), y0, BUTTON_W, BUTTON_H)
 
     def draw_button_labels(self) -> None:
         """Affiche les labels des boutons"""
         if not self.buttons:
             return
+        # Affiche les textes au centre de chaque bouton
         for (bx, by, bw, bh), btn in zip(self._button_rects(), self.buttons):
             self.mlx.mlx_string_put(self.mlx_ptr, self.win,
                                     bx + 8, by + bh // 2 - 5,
@@ -190,7 +197,6 @@ class Display:
                 self._fill_interior(self.exit[0], self.exit[1], exit_color)
             self.need_redraw = False
         if self.show_path and self.path_index < len(self.path_cells):
-            
             index_clr = (self.color_manager.index + 2) % len(WALL_COLORS)
             path_color = WALL_COLORS[index_clr].to_bytes(4, 'little')
             for _ in range(PATH_SPEED):

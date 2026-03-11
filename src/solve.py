@@ -49,6 +49,7 @@ def solve_cells(maze: Maze) -> List[Tuple[int, int]]:
     }
     x, y = maze.entry
     cells: List[Tuple[int, int]] = [(x, y)]
+    # Applique les deplacements et ajoute la pos a la liste
     for letter in path_str:
         dir_x, dir_y = convert_letter[letter]
         x += dir_x
