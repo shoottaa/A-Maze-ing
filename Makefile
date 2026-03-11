@@ -23,7 +23,6 @@ install:
 	$(PIP) install -r requirements.txt
 
 run:
-	$(MAKE) -C mlx_CLXV
 	$(PY) $(MAIN) $(CONFIG)
 
 debug:
