@@ -29,7 +29,7 @@ debug:
 	$(PY) -m pdb $(MAIN) $(CONFIG)
 
 lint:
-	$(FLAKE8) .
+	$(FLAKE8) --exclude=.venv .
 	$(MYPY) . $(MYPY_FLAGS)
 
 clean:

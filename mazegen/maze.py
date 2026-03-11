@@ -1,4 +1,4 @@
-from typing import List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 
 NORTH = 0x1  # 0001
@@ -47,7 +47,7 @@ class Maze:
     """Represente la grille de toutes les cellules"""
     def __init__(self, width: int, height: int,
                  entry: Tuple[int, int],
-                 exit_pos: Tuple[int, int]) -> None:
+                 exit_pos: Optional[Tuple[int, int]]) -> None:
         """Initialise la grille avec tous les murs fermes
             width: Nombre de colonnes
             height: Nombre de lignes

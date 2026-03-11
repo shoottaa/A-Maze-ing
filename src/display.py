@@ -1,7 +1,8 @@
 import random
-from mlx import Mlx  # type: ignore
+from typing import Optional, Callable, Any, Generator
+from mlx import Mlx
 from mazegen.maze import Maze, NORTH, SOUTH, EAST, WEST
-from src.color import ColorManager, WALL_COLORS  # type: ignore
+from src.color import ColorManager, WALL_COLORS
 from mazegen.solve import solve_cells
 
 CELL_SIZE = 20
@@ -15,9 +16,10 @@ PATH_SPEED = 1       # Vitesse du path
 
 
 class Display:
-
-    def __init__(self, width: int, height: int, maze_params=None,
-                 generate_maze_func=None, buttons=None) -> None:
+    def __init__(self, width: int, height: int,
+                 maze_params: Optional[dict[str, Any]] = None,
+                 generate_maze_func: Optional[Callable[..., None]] = None,
+                 buttons: Optional[list[dict[str, Any]]] = None) -> None:
         """Initialise la fenêtre et les paramètres d'affichage du maze"""
         self.maze_height = height
         self.width = width + 2 * MAZE_MARGIN
@@ -28,7 +30,7 @@ class Display:
         self.mlx_ptr = self.mlx.mlx_init()
         self.win = self.mlx.mlx_new_window(self.mlx_ptr, self.width,
                                            self.height, "A-Maze-ing")
-        self.maze = None
+        self.maze: Optional[Maze] = None
         self.img = self.mlx.mlx_new_image(self.mlx_ptr, self.width,
                                           self.height)
         # self.pythondata = buffer
@@ -40,9 +42,9 @@ class Display:
         self.generate_maze_func = generate_maze_func
         self.need_redraw = True
         self.color_manager = ColorManager()
-        self.entry = None
-        self.exit = None
-        self.path_cells = []
+        self.entry: Optional[tuple[int, int]] = None
+        self.exit: Optional[tuple[int, int]] = None
+        self.path_cells: list[tuple[int, int]] = []
         self.show_path = False
 
     def clear_image(self) -> None:
@@ -104,6 +106,7 @@ class Display:
     def draw_cell(self, x: int, y: int) -> None:
         """Dessine les murs d'une cellule et remplit l'intérieur
         si c'est un pattern"""
+        assert self.maze is not None
         cell = self.maze.get_cell(x, y)
         if (x, y) in self.maze.pattern_cells:
             b, g, r, a = self.color_manager.current()
@@ -118,8 +121,11 @@ class Display:
         if cell.has_wall(EAST):
             self.draw_vertical_wall(x, y, 1)
 
-    def _button_rects(self):
+    def _button_rects(self) -> Generator[tuple
+                                         [int, int, int, int], None, None]:
         """Calcule les rectangles de chaque bouton pour le dessin des labels"""
+        if not self.buttons:
+            return
         n = len(self.buttons)
         total_w = n * BUTTON_W + (n - 1) * BUTTON_GAP
         x0 = (self.width - total_w) // 2 - 30  # Centre les boutons + decalage
@@ -162,10 +168,11 @@ class Display:
         self.show_path = not self.show_path
         self.path_index = 0
         if self.show_path:
+            assert self.maze is not None
             self.path_cells = solve_cells(self.maze)
         self.need_redraw = True
 
-    def key_pressed(self, key, param) -> None:
+    def key_pressed(self, key: int, param: Any) -> None:
         """Gestion des touches ci-dessous"""
         if key == 65307:   # Échap
             self.mlx.mlx_loop_exit(self.mlx_ptr)
@@ -176,12 +183,13 @@ class Display:
         elif key == 112:   # P
             self.toggle_path()
 
-    def render(self, param) -> None:
+    def render(self, param: Any) -> None:
         """Affiche le maze et les labels des boutons.
         Re-dessine le maze seulement si besoin"""
         if self.need_redraw:
             self.clear_image()
             self.path_index = 0
+            assert self.maze is not None
             for y in range(self.maze.height):
                 for x in range(self.maze.width):
                     self.draw_cell(x, y)
