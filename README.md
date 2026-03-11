@@ -123,14 +123,27 @@ Le Recursive Backtracker a été choisi parce que :
 ## Parties réutilisables
 
 | Module | Rôle | Comment réutiliser |
-|--------|------|--------------------|
-| `src/maze.py` | Structures `Cell` et `Maze` avec représentation bitmask des murs | Importer `Maze` et `Cell` pour tout projet nécessitant un modèle de grille |
-| `src/generate.py` | `generate_maze(maze, seed, perfect)` | Appeler avec n'importe quelle instance `Maze` pour la peupler |
-| `src/solve.py` | `solve(maze)` → chaîne de directions, `solve_cells(maze)` → liste de `(x, y)` | Solveur BFS clé en main, fonctionne sur n'importe quelle instance `Maze` |
-| `src/parse_config.py` | `parse_config(path)` → dict de config validé | Chargeur de config réutilisable pour tout projet au format `CLÉ=VALEUR` |
-| `src/color.py` | `ColorManager` avec cycle de couleurs | Gestionnaire d'état de couleur réutilisable pour tout projet de dessin pixel |
-
+|--------|------|------------------|
+| `mazegen/maze.py` | Structures `Cell` et `Maze` avec représentation bitmask des murs | Importer `Maze` et `Cell` pour tout projet nécessitant une grille de type labyrinthe |
+| `mazegen/generate.py` | `generate_maze(maze, seed, perfect)` | Appeler avec n’importe quelle instance `Maze` pour générer un labyrinthe |
+| `mazegen/solve.py` | `solve(maze)` → chaîne de directions, `solve_cells(maze)` → liste de `(x, y)` | Solveur BFS clé en main, compatible avec toute instance `Maze` |
+| `mazegen/pattern.py` | Fonctions de génération de motifs 42 |
 ---
+
+## Exemple d'utilisation
+
+Voici un exemple simple montrant comment générer et résoudre un labyrinthe avec le package `mazegen` :
+
+```python
+from mazegen import MazeGenerator
+
+# 25x25, entree 0/0, sortie 20/20, seed 42, perfect
+gen = MazeGenerator(25, 25, (0, 0), (20, 20), 42, True)
+
+maze = gen.get_grid()
+solution = gen.maze_solve()
+print(solution)
+```
 
 ## Équipe et gestion de projet
 

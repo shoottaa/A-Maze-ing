@@ -1,8 +1,8 @@
 import random
 from mlx import Mlx  # type: ignore
-from src.maze import Maze, NORTH, SOUTH, EAST, WEST
+from mazegen.maze import Maze, NORTH, SOUTH, EAST, WEST
 from src.color import ColorManager, WALL_COLORS  # type: ignore
-from src.solve import solve_cells
+from mazegen.solve import solve_cells
 
 CELL_SIZE = 20
 WALL_SIZE = 3
